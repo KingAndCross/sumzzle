@@ -1,9 +1,9 @@
 const cells = document.getElementsByClassName("num-cell");
 const wrapper = document.getElementById("wrapper");
 
-const maxTimerSize = 372;
 const timer = document.getElementById("timer");
-let timerWidth = parseInt(getComputedStyle(timer).width);
+const maxTimerSize = parseInt(getComputedStyle(timer).width);
+let timerWidth = maxTimerSize;
 let timerID = 1;
 let timeMs = 100;
 
@@ -143,15 +143,10 @@ function newGame(tiles) {
 function gameOver() {
     alert(`¡perdiste! tu puntaje fue de ${puntos}`)
     puntos = 0;
+    timeMs = 100;
     newGame(3);
 }
 
 
 selectedListener()
 newGame(3)
-
-
-// TODO: animate time bar below
-// TODO: dynamic diff. More active cells, more range, less time etc.
-// TODO: hide tiles while reloading
-// TODO: agregar un temporizador que desmarque
