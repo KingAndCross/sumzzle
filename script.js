@@ -1,10 +1,18 @@
 const cells = document.getElementsByClassName("num-cell");
 const wrapper = document.getElementById("wrapper");
 
+const maxTimerSize = 372;
+const timer = document.getElementById("timer");
+let timerWidth = parseInt(getComputedStyle(timer).width);
+let timerID = 1;
+let timeMs = 100;
+
 let total = 0;
 let objetivo = 0;
 let nivel = 1;
 let puntos = 0;
+let amountOfTiles = 2;
+
 
 cellsIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -77,24 +85,11 @@ function newProblem() {
 }
 
 function nextLevel() {
-    const amountOfTiles = Math.floor(puntos / 5 + 2)
+    amountOfTiles = Math.floor(puntos / 5 + 2);
+    timeMs = Math.max(2, Math.floor((10 - puntos * 0.5))) * 10;
     newGame(amountOfTiles)
 }
 
-function newGame(tiles) {
-    // Generamos los números que estarán en el tablero
-    const cellsToActivate = selectRandomTilesIndex(tiles);
-    const nums = randomNumGenerator(tiles);
-    const cellArray = selectRandomTilesIndex(tiles);
-    // Selecciono 3 para la respuesta
-    objetivo = nums.slice(0, tiles - 1).reduce((a, b) => a + b, 0);
-    // reseteo el tablero, establezco un objetivo y colocamos las piezas
-    resetTiles();
-    activateTiles(cellsToActivate, cells);
-    setObjective(objetivo);
-    setCellNums(nums, cellArray);
-    total = 0;
-}
 
 // Crea un array aleatorio que será usado para generar la respuesta correcta
 // Agregar un slice a partir del cuál será la respuesta
@@ -107,11 +102,54 @@ function randomNumGenerator(n = 3) {
     return randomArray
 }
 
-//.reduce((a, b) => a + b, 0)
+// set the width from a given percentage
+function timerPercentage(percentage) {
+    timerWidth -= Math.floor((percentage * maxTimerSize) / 100);
+    timer.style.width = `${timerWidth}px`;
+}
+
+function animateTimer() {
+    if (timerWidth > 10) {
+        timerPercentage(1)
+    } else {
+        clearInterval(timerID)
+        gameOver()
+    }
+}
+
+function setTimer(time) {
+    return setInterval(animateTimer, time)
+}
+
+function newGame(tiles) {
+    // Generamos los números que estarán en el tablero
+    clearInterval(timerID)
+    const cellsToActivate = selectRandomTilesIndex(tiles);
+    const nums = randomNumGenerator(tiles);
+    const cellArray = selectRandomTilesIndex(tiles);
+    // Selecciono 3 para la respuesta
+    objetivo = nums.slice(0, tiles - 1).reduce((a, b) => a + b, 0);
+    // reseteo el tablero, establezco un objetivo y colocamos las piezas
+    resetTiles();
+    activateTiles(cellsToActivate, cells);
+    setObjective(objetivo);
+    setCellNums(nums, cellArray);
+    timerPercentage(0);
+    timerWidth = maxTimerSize;
+    timerID = setTimer(timeMs);
+    total = 0;
+}
+
+function gameOver() {
+    alert(`¡perdiste! tu puntaje fue de ${puntos}`)
+    puntos = 0;
+    newGame(3);
+}
 
 
-newGame(3)
 selectedListener()
+newGame(3)
+
 
 // TODO: animate time bar below
 // TODO: dynamic diff. More active cells, more range, less time etc.
