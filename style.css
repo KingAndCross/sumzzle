@@ -15,6 +15,7 @@ header {
     padding: 10px;
 }
 
+
 body {
     display: flex;
     flex-direction: column;
@@ -24,6 +25,11 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: var(--bg-color);
+}
+
+p {
+    width: 100%;
+    padding: 8px 0;
 }
 
 .wrapper {
@@ -42,11 +48,12 @@ body {
 
 .num-cell {
     width: 90%;
+    height: 90%;
     font-size: 4em;
     text-align: center;
     border: none;
     border-radius: 5px;
-    padding: 5%;
+    padding: 0;
 }
 
 .num-cell:hover {

@@ -1,23 +1,28 @@
 const cells = document.getElementsByClassName("num-cell");
 const wrapper = document.getElementById("wrapper");
+
 let total = 0;
 let objetivo = 0;
+let nivel = 1;
 
 cellsIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-// TODO: aqui se puede poner el listener en el wrapper y usar e.target
 function selectedListener() {
     wrapper.addEventListener("click", (e) => {
-        if (e.target.classList.contains("active")) {
-            e.target.classList.toggle("selected");
+        const clickedCell = e.target.parentElement
+        const cellIsActive = clickedCell.classList.contains("active")
+        const cellIsSelected = clickedCell.classList.contains("selected")
+        if (cellIsActive) {
+            clickedCell.classList.toggle("selected");
         }
-        if (e.target.classList.contains("selected")) {
-            total += parseInt(e.target.innerHTML);
-        } else {
+        if (cellIsSelected) {
             total -= parseInt(e.target.innerHTML);
+        } else {
+            total += parseInt(e.target.innerHTML);
         }
         if (checkWin(objetivo))
             endGame()
+        console.log(total)
     })
 }
 
@@ -29,32 +34,36 @@ function selectBtn(e) {
 
 function checkWin(num) {
     // chequea si la suma es igual al total
-    let suma = 0;
-    const selectedCells = document.getElementsByClassName("selected");
-    for (let i = 0; i < selectedCells.length; i++) {
-        suma += parseInt(selectedCells[i].innerHTML)
-    };
-    return suma === num
+    return total === num
 }
 
 function resetTiles() {
     // Aqui hago una selección aleatoria de algunas celdas para activarla
     // TODO: cambiar el número de celdas seleccionadas modificando el slice
-    const activeCellsIndex = cellsIndex.sort(
-        function () { return Math.random() - 0.5; }
-    ).slice(0, 3);
-    const cells = document.getElementsByClassName("num-cell")
-    // Itero por las celdas para activarlas
-    for (const index of activeCellsIndex) {
-        cells[index - 1].classList.toggle("inactive")
-        cells[index - 1].classList.toggle("active")
+    // Itero por las celdas para desactivarlas si es que están activadas
+    for (const cell of cells) {
+        cell.classList.replace("active", "inactive")
+        cell.classList.remove("selected")
     };
 }
 
-function setCellNums(arrayOfValues) {
+function activateTiles(arrayOfIndex, cells) {
+    for (const index of arrayOfIndex) {
+        cells[index - 1].classList.replace("inactive", "active")
+    }
+}
+
+function selectRandomTilesIndex(n = 9) {
+    const randomTilesIndex = cellsIndex.sort(
+        function () { return Math.random() - 0.5; }
+    );
+    return randomTilesIndex.slice(0, n)
+}
+
+function setCellNums(arrayOfValues, arrayOfCellsIndex) {
     const activeCells = document.getElementsByClassName("active");
     for (let i = 0; i < arrayOfValues.length; i++) {
-        activeCells[i].innerHTML = arrayOfValues[i];
+        activeCells[i].firstElementChild.innerHTML = arrayOfValues[i];
     }
 }
 
@@ -64,20 +73,23 @@ function setObjective(num) {
 }
 
 function endGame() {
-    console.log("game over!")
+    newGame();
 }
 
 function newGame() {
     // Generamos los números que estarán en el tablero
+    const cellsToActivate = selectRandomTilesIndex(4);
     nums = randomNumGenerator(4);
+    cellArray = selectRandomTilesIndex(4);
     // Selecciono 3 para la respuesta
     objetivo = nums.slice(0, 3).reduce((a, b) => a + b, 0);
     total = 0;
+    // reseteo el tablero, establezco un objetivo y colocamos las piezas
     resetTiles();
+    activateTiles(cellsToActivate, cells);
     setObjective(objetivo);
-    setCellNums(nums);
+    setCellNums(nums, cellArray);
 }
-
 
 // Crea un array aleatorio que será usado para generar la respuesta correcta
 // Agregar un slice a partir del cuál será la respuesta
@@ -99,3 +111,4 @@ selectedListener()
 // TODO: Reset game after victory
 // TODO: animate time bar below
 // TODO: dynamic diff. More active cells, more range, less time etc.
+// TODO: hide tiles while reloading
