@@ -8,10 +8,11 @@
 
 * {
     margin: 0;
+    font-family: 'Concert One', cursive;
 }
 
 header {
-    font-size: 50px;
+    font-size: 70px;
     padding: 10px;
 }
 
@@ -28,6 +29,7 @@ body {
 }
 
 p {
+    font-size: 60px;
     width: 100%;
     padding: 8px 0;
 }
@@ -35,6 +37,8 @@ p {
 .wrapper {
     aspect-ratio: 1 / 1;
     width: 40%;
+    max-width: 350px;
+    min-width: 300px;
     border-radius: 10px;
     background-color: white;
     display: grid;
@@ -43,11 +47,16 @@ p {
     gap: 10px;
     align-items: center;
     justify-items: center;
-    margin-bottom: 50px;
+    padding: 0.8rem;
+}
+
+.wrapper.hidden {
+    visibility: hidden;
 }
 
 .num-cell {
     width: 90%;
+    min-width: 80px;
     height: 90%;
     font-size: 4em;
     text-align: center;
@@ -74,4 +83,25 @@ p {
 
 .num-cell.selected {
     background-color: var(--primary2);
+}
+
+.timer-wrapper {
+    display: flex;
+    align-items: center;
+    width: 70vw;
+    max-width: 380px;
+    height: 5vh;
+    border: solid 3px white;
+    border-radius: 10px;
+    margin-bottom: 3rem;
+}
+
+.timer {
+    box-sizing: border-box;
+    width: 100%;
+    height: 80%;
+    border-radius: 7px;
+    margin-left: 4px;
+    margin-right: 4px;
+    background-color: white;
 }

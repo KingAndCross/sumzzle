@@ -4,10 +4,12 @@ const wrapper = document.getElementById("wrapper");
 let total = 0;
 let objetivo = 0;
 let nivel = 1;
+let puntos = 0;
 
 cellsIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 function selectedListener() {
+    // Esta función se encarga de delegar los eventos a las celdas
     wrapper.addEventListener("click", (e) => {
         const clickedCell = e.target.parentElement
         const cellIsActive = clickedCell.classList.contains("active")
@@ -21,16 +23,11 @@ function selectedListener() {
             total += parseInt(e.target.innerHTML);
         }
         if (checkWin(objetivo))
-            endGame()
-        console.log(total)
+            newProblem()
     })
 }
 
-function selectBtn(e) {
-    e.classList.toggle("selected")
-}
 
-// TODO: agregar un temporizador que desmarque
 
 function checkWin(num) {
     // chequea si la suma es igual al total
@@ -72,23 +69,31 @@ function setObjective(num) {
     numObjetivo.innerHTML = num;
 }
 
-function endGame() {
-    newGame();
+function newProblem() {
+    wrapper.classList.toggle("hidden");
+    puntos++;
+    nextLevel();
+    wrapper.classList.toggle("hidden");
 }
 
-function newGame() {
+function nextLevel() {
+    const amountOfTiles = Math.floor(puntos / 5 + 2)
+    newGame(amountOfTiles)
+}
+
+function newGame(tiles) {
     // Generamos los números que estarán en el tablero
-    const cellsToActivate = selectRandomTilesIndex(4);
-    nums = randomNumGenerator(4);
-    cellArray = selectRandomTilesIndex(4);
+    const cellsToActivate = selectRandomTilesIndex(tiles);
+    const nums = randomNumGenerator(tiles);
+    const cellArray = selectRandomTilesIndex(tiles);
     // Selecciono 3 para la respuesta
-    objetivo = nums.slice(0, 3).reduce((a, b) => a + b, 0);
-    total = 0;
+    objetivo = nums.slice(0, tiles - 1).reduce((a, b) => a + b, 0);
     // reseteo el tablero, establezco un objetivo y colocamos las piezas
     resetTiles();
     activateTiles(cellsToActivate, cells);
     setObjective(objetivo);
     setCellNums(nums, cellArray);
+    total = 0;
 }
 
 // Crea un array aleatorio que será usado para generar la respuesta correcta
@@ -105,10 +110,10 @@ function randomNumGenerator(n = 3) {
 //.reduce((a, b) => a + b, 0)
 
 
-newGame()
+newGame(3)
 selectedListener()
 
-// TODO: Reset game after victory
 // TODO: animate time bar below
 // TODO: dynamic diff. More active cells, more range, less time etc.
 // TODO: hide tiles while reloading
+// TODO: agregar un temporizador que desmarque
