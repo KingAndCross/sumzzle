@@ -42,14 +42,18 @@ function checkWin(num) {
     return total === num
 }
 
-function resetTiles() {
+async function resetTiles() {
     // Aqui hago una selección aleatoria de algunas celdas para activarla
     // TODO: cambiar el número de celdas seleccionadas modificando el slice
     // Itero por las celdas para desactivarlas si es que están activadas
     for (const cell of cells) {
-        cell.classList.replace("active", "inactive")
         cell.classList.remove("selected")
+        cell.classList.replace("active", "inactive")
     };
+}
+
+function hideWrapper() {
+    wrapper.classList.toggle("hidden");
 }
 
 function activateTiles(arrayOfIndex, cells) {
@@ -66,9 +70,10 @@ function selectRandomTilesIndex(n = 9) {
 }
 
 function setCellNums(arrayOfValues, arrayOfCellsIndex) {
-    const activeCells = document.getElementsByClassName("active");
-    for (let i = 0; i < arrayOfValues.length; i++) {
-        activeCells[i].firstElementChild.innerHTML = arrayOfValues[i];
+    let i = 0;
+    for (index of arrayOfCellsIndex) {
+        cells[index - 1].firstElementChild.innerHTML = arrayOfValues[i];
+        i++
     }
 }
 
@@ -121,23 +126,24 @@ function setTimer(time) {
     return setInterval(animateTimer, time)
 }
 
-function newGame(tiles) {
+async function newGame(tiles) {
     // Generamos los números que estarán en el tablero
+    hideWrapper();
     clearInterval(timerID)
     const cellsToActivate = selectRandomTilesIndex(tiles);
     const nums = randomNumGenerator(tiles);
-    const cellArray = selectRandomTilesIndex(tiles);
     // Selecciono 3 para la respuesta
     objetivo = nums.slice(0, tiles - 1).reduce((a, b) => a + b, 0);
     // reseteo el tablero, establezco un objetivo y colocamos las piezas
-    resetTiles();
+    await resetTiles();
     activateTiles(cellsToActivate, cells);
+    setCellNums(nums, cellsToActivate);
     setObjective(objetivo);
-    setCellNums(nums, cellArray);
     timerPercentage(0);
     timerWidth = maxTimerSize;
     timerID = setTimer(timeMs);
     total = 0;
+    hideWrapper();
 }
 
 function gameOver() {

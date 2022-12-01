@@ -50,16 +50,13 @@ p {
     padding: 0.8rem;
 }
 
-.wrapper.hidden {
-    visibility: hidden;
-}
-
 .num-cell {
     width: 90%;
     min-width: 80px;
     height: 90%;
     font-size: 4em;
     text-align: center;
+    justify-content: center;
     border: none;
     border-radius: 5px;
     padding: 0;
@@ -67,13 +64,11 @@ p {
 
 .num-cell:hover {
     background-color: var(--secondary1);
-    transition: 0.5s;
 }
 
 .num-cell.active {
     cursor: pointer;
     background-color: var(--bg-color);
-    transition: 0.5s;
 }
 
 .num-cell.inactive {
@@ -83,6 +78,7 @@ p {
 
 .num-cell.selected {
     background-color: var(--primary2);
+    transition: 0.3s ease-in;
 }
 
 .timer-wrapper {
@@ -93,7 +89,7 @@ p {
     height: 5vh;
     border: solid 3px white;
     border-radius: 10px;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .timer {
