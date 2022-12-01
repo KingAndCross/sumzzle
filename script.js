@@ -6,6 +6,7 @@ const maxTimerSize = parseInt(getComputedStyle(timer).width);
 let timerWidth = maxTimerSize;
 let timerID = 1;
 let timeMs = 100;
+let difficulty = 1;
 
 let total = 0;
 let objetivo = 0;
@@ -24,14 +25,15 @@ function selectedListener() {
         const cellIsSelected = clickedCell.classList.contains("selected")
         if (cellIsActive) {
             clickedCell.classList.toggle("selected");
+            if (cellIsSelected) {
+                total -= parseInt(e.target.innerHTML);
+            } else {
+                total += parseInt(e.target.innerHTML);
+            }
         }
-        if (cellIsSelected) {
-            total -= parseInt(e.target.innerHTML);
-        } else {
-            total += parseInt(e.target.innerHTML);
-        }
-        if (checkWin(objetivo))
+        if (checkWin(objetivo)) {
             newProblem()
+        }
     })
 }
 
@@ -91,19 +93,24 @@ function newProblem() {
 
 function nextLevel() {
     amountOfTiles = Math.floor(puntos / 5 + 2);
-    timeMs = Math.max(2, Math.floor((10 - puntos * 0.5))) * 10;
+    timeMs = Math.max(2, Math.floor((-0.02 * puntos ** 2 + 10))) * 10;
     newGame(amountOfTiles)
 }
 
+function randomSign() {
+    return (Math.random() > 0.5) ? -1 : 1
+}
 
 // Crea un array aleatorio que será usado para generar la respuesta correcta
 // Agregar un slice a partir del cuál será la respuesta
 // TODO: cambiar el largo según parámetros
 function randomNumGenerator(n = 3) {
+    difficulty = Math.floor((puntos ** 2) * 0.05);
     const randomArray = Array.from(
         { length: n },
-        () => Math.floor(((Math.random() - 0.5)) * 10)
+        () => randomSign() * Math.floor(((Math.random() - 0.5)) * 10) + difficulty
     );
+    () => Math.floor(((Math.random() - 0.5)) * 10)
     return randomArray
 }
 
@@ -152,6 +159,7 @@ function gameOver() {
     timeMs = 100;
     newGame(3);
 }
+
 
 
 selectedListener()
