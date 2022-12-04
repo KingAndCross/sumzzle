@@ -19,8 +19,7 @@ cellsIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 function selectedListener() {
     // Esta función se encarga de delegar los eventos a las celdas
-    wrapper.addEventListener("click", (e) => {
-        const clickedCell = e.target.parentElement
+    wrapper.addEventListener("click", (e) => {const clickedCell = e.target.parentElement
         const cellIsActive = clickedCell.classList.contains("active")
         const cellIsSelected = clickedCell.classList.contains("selected")
         if (cellIsActive) {
